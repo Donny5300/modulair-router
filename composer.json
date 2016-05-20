@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "php": ">=7.*",
+    "php": ">=7",
     "illuminate/support": "5.0.x|5.1.x|5.2.x|5.3.x",
     "illuminate/console": "5.0.x|5.1.x|5.2.x|5.3.x",
     "illuminate/filesystem": "5.0.x|5.1.x|5.2.x|5.3.x",
@@ -20,11 +20,6 @@
   "autoload": {
     "psr-4": {
       "Donny5300\\ModulairRouter\\": "src"
-    }
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0"
     }
   }
 }
