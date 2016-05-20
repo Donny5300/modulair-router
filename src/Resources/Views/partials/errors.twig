@@ -1,0 +1,7 @@
+{% if session('errors') %}
+	<ul>
+		{% for error in session('errors').all() %}
+			<li>{{ error }}</li>
+		{% endfor %}
+	</ul>
+{% endif %}

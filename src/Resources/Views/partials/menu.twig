@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="/{{ system_routes.base_path }}/css">
+
+<ul class="menu">
+
+	{% for item in {0: {title: 'Namespaces'}, 1: {title: 'Modules'},2: {title: 'Controllers'}, 3: {title: 'Methods'}} %}
+		<li>
+
+			<span>{{ item.title }}</span>
+			<ul>
+				<li>
+					<a href="/{{ system_routes.base_path }}/{{ system_routes[(item.title | lower)] }}">Index</a>
+				</li>
+				<li>
+					<a href="/{{ system_routes.base_path }}/{{ system_routes[(item.title | lower)] }}/create">Add new</a>
+				</li>
+			</ul>
+		</li>
+	{% endfor %}
+
+	<li>
+		<a href="/system/mapping">Routes overview</a>
+	</li>
+</ul>

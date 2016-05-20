@@ -1,0 +1,11 @@
+.menu li, .menu ul
+{
+	display: inline-block;
+	margin-left: 0;
+	padding-left: 0;
+}
+
+.menu ul
+{
+	padding-right: 50px;
+}

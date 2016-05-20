@@ -1,0 +1,19 @@
+<h1>Controller {{ message.getMessage() }} not found</h1>
+
+{% if fileExists %}
+	<p>The file exists, please validate the namespace, controller class name and make sure the path is correct</p>
+{% else %}
+	<p>File does'nt exists. Would you like to create the file?</p>
+
+	<form action="/system/exceptions/controller/create" method="post">
+		{{ csrf_field() }}
+		<ul>
+			<li>Controller name: <input type="text" name="controller" value="{{ controller }}" readonly></li>
+			<li>Namespace: <input type="text" name="namespace" value="{{ namespace }}" readonly></li>
+			<li>Module: <input type="text" name="module" value="{{ module }}" readonly></li>
+		</ul>
+
+		<input type="submit" value="Create missing controller">
+	</form>
+
+{% endif %}

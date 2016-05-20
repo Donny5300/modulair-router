@@ -1,0 +1,45 @@
+{% include 'd5300.router::partials.menu' %}
+
+<table border="1">
+	<thead>
+		<tr>
+			<td style="width: 50px;"># ID</td>
+			<td style="width: 400px;">Title</td>
+			<td style="width: 400px;">Namespace</td>
+			<td style="width: 100px;">Controllers</td>
+			<td style="width: 100px;">Actions</td>
+		</tr>
+	</thead>
+
+	<tbody>
+		{% for item in modules %}
+			<tr>
+				<td>{{ item.id }}</td>
+				<td>{{ item.title }}</td>
+				<td>{{ item.appNamespace.title }}</td>
+				<td>
+					{% if item.controllers %}
+						<ul>
+							{% for controller in item.controllers %}
+								<li>
+									{{ controller.title }}
+								</li>
+							{% endfor %}
+						</ul>
+					{% else %}
+						No controllers found
+					{% endif %}
+
+				</td>
+				<td>
+					<a href="/system/modules/{{ item.uuid }}/edit">Edit</a>
+					
+					<form action="/system/modules/{{ item.uuid }}" method="post">
+						{{ csrf_field() }}
+						<input type="submit" value="Delete">
+					</form>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>

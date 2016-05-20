@@ -1,0 +1,30 @@
+{% include 'd5300.router::partials.menu' %}
+
+<table border="1">
+	<thead>
+		<tr>
+			<td style="width: 50px;"># ID</td>
+			<td style="width: 400px;">Title</td>
+			<td style="width: 400px;">Module</td>
+			<td style="width: 100px;">Actions</td>
+		</tr>
+	</thead>
+
+	<tbody>
+		{% for item in controllers %}
+			<tr>
+				<td>{{ item.id }}</td>
+				<td>{{ item.title }}</td>
+				<td>{{ item.module.title }}</td>
+				<td>
+					<a href="/system/controllers/{{ item.uuid }}/edit">Edit</a>
+
+					<form action="/system/controllers/{{ item.uuid }}" method="post">
+						{{ csrf_field() }}
+						<input type="submit" value="Delete">
+					</form>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>

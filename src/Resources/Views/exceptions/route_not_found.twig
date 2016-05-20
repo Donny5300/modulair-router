@@ -1,0 +1,31 @@
+<h1>{{ exception.getMessage() }}</h1>
+
+<form action="/system/exceptions/missing-route/create" method="post">
+	{{ csrf_field() }}
+	<table>
+		<tr>
+			<td>Namespace:</td>
+			<td><input type="text" name="namespace" readonly value="{{ namespace }}"></td>
+			<td>{{ hasNamespace ? 'Found' : 'Not found' }}</td>
+		</tr>
+		<tr>
+			<td>Module:</td>
+			<td><input type="text" name="module" readonly value="{{ module }}"></td>
+			<td>{{ hasModule ? 'Found' : 'Not found' }}</td>
+		</tr>
+		<tr>
+			<td>Controller:</td>
+			<td><input type="text" name="controller" readonly value="{{ controller }}"></td>
+			<td>{{ hasController ? 'Found' : 'Not found' }}</td>
+		</tr>
+		<tr>
+			<td>Method:</td>
+			<td><input type="text" name="action" value="{{ method }}"></td>
+			<td>{{ hasMethod ? 'Found' : 'Not found' }}</td>
+		</tr>
+
+		<tr>
+			<td colspan="3" align="center"><input type="submit" value="Store route"></td>
+		</tr>
+	</table>
+</form>

@@ -1,0 +1,33 @@
+{% include 'd5300.router::partials.menu' %}
+
+<table border="1">
+	<thead>
+		<tr>
+			<td style="width: 50px;"># ID</td>
+			<td style="width: 400px;">Title</td>
+			<td style="width: 400px;">Module</td>
+			<td style="width: 100px;">Actions</td>
+		</tr>
+	</thead>
+
+	<tbody>
+		{% for item in methods %}
+			<tr>
+				<td>{{ item.id }}</td>
+				<td>{{ item.title }}</td>
+				<td>{{ item.controller.title }}</td>
+				<td>
+					<a href="/system/methods/{{ item.uuid }}/edit">Edit</a>
+
+					<form action="/system/methods/{{ item.uuid }}" method="post">
+						{{ csrf_field() }}
+						<input type="submit" value="Delete">
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">{{ item.description ? item.description : 'No description for this namespace' }}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>

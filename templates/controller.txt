@@ -1,0 +1,10 @@
+<?php namespace $$namespace$$
+
+$$uses$$
+
+class $$class_name$$ extends $$base_controller$$ {
+
+	public function index(){
+		return 'File created at: '.__FILE__;
+	}
+}

@@ -1,0 +1,81 @@
+{% include 'd5300.router::partials.menu' %}
+{% include 'd5300.router::partials.errors' %}
+
+<form action="/system/methods/{{item.uuid}}/edit" method="post">
+
+	{{csrf_field()}}
+	<table border="1" width="960" cellpadding="10">
+		<thead>
+			<tr>
+				<th colspan="2">Edit method</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Title</td>
+				<td>
+					<input type="text" name="title" placeholder="Method title" value="{{ old('title', item.title) }}">
+				</td>
+			</tr>
+			<tr>
+				<td>Developer only</td>
+				<td>
+					<select name="developer_only" id="">
+						<option value="0" {{ old('developer_only', item.developer_only) == 0 ? 'selected' }}>No</option>
+						<option value="1" {{ old('developer_only', item.developer_only) == 1 ? 'selected' }}>Yes</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Is online</td>
+				<td>
+					<select name="is_online" id="">
+						<option value="0" {{ old('is_online', item.is_online) == 0 ? 'selected' }}>No</option>
+						<option value="1" {{ old('is_online', item.is_online) == 1 ? 'selected' }}>Yes</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Is visible</td>
+				<td>
+					<select name="is_visible" id="">
+						<option value="0" {{ old('is_visible', item.is_visible) == 0 ? 'selected' }}>No</option>
+						<option value="1" {{ old('is_visible', item.is_visible) == 1 ? 'selected' }}>Yes</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Request method</td>
+				<td>
+					<select name="request_method" id="">
+						{% for method in requestMethods %}
+							<option value="{{ method }}" {{ old('request_method', item.request_method) == method ? 'selected' }}>{{ method | upper }}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Description</td>
+				<td>
+					<textarea name="description" id="" cols="60" rows="10">{{ old('description', item.description) }}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>Controller</td>
+				<td>
+					<select name="controller_id" id="">
+						{% for key, value in controllers %}
+							<option value="{{ key }}" {{ old('module_id', item.controller_id) == key ? 'selected' }}>{{ value }}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>
+					<input type="submit" value="Save">
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</form>

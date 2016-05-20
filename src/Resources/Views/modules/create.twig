@@ -1,0 +1,63 @@
+{% include 'd5300.router::partials.menu' %}
+{% include 'd5300.router::partials.errors' %}
+
+<form action="/system/modules/create" method="post">
+
+	{{ csrf_field() }}
+
+	<table border="1" width="960" cellpadding="10">
+		<thead>
+			<tr>
+				<th colspan="2">Add new module</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Title</td>
+				<td>
+					<input type="text" name="title" placeholder="Module title">
+				</td>
+			</tr>
+			<tr>
+				<td>Developer only</td>
+				<td>
+					<select name="developer_only" id="">
+						<option value="0" {{ old('developer_only') == 0 ? 'selected' }}>No</option>
+						<option value="1" {{ old('developer_only') == 1 ? 'selected' }}>Yes</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Is online</td>
+				<td>
+					<select name="is_online" id="">
+						<option value="0" {{ old('is_online') == 0 ? 'selected' }}>No</option>
+						<option value="1" {{ old('is_online') == 1 ? 'selected' }}>Yes</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Description</td>
+				<td>
+					<textarea name="description" id="" cols="60" rows="10"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>Namespace</td>
+				<td>
+					<select name="namespace_id" id="">
+						{% for key, value in namespaces %}
+							<option value="{{ key }}">{{ value }}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>
+					<input type="submit" value="Save">
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</form>

@@ -1,0 +1,47 @@
+Checks: <br>
+<form action="" method="post">
+	{{ csrf_field() }}
+	Developer only:
+	<input type="checkbox" name="is_developer" value="1">
+	<br>
+	<input type="submit" value="Check">
+</form>
+
+<ul>
+	{% for namespace in tree %}
+		<li>
+			<span>{{ namespace.title }}</span>
+
+			{% if namespace.modules %}
+				<ul>
+					{% for module in namespace.modules %}
+						<li>
+							<span>{{ module.title }}</span>
+
+							{% if module.controllers %}
+								<ul>
+									{% for controller in module.controllers %}
+										<li>
+											<span>{{ controller.title }}</span>
+
+											{% if controller.methods %}
+
+												<ul>
+													{% for method in controller.methods %}
+														<li><span>{{ method.title }}</span></li>
+													{% endfor %}
+												</ul>
+
+											{% endif %}
+										</li>
+									{% endfor %}
+								</ul>
+
+							{% endif %}
+						</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		</li>
+	{% endfor %}
+</ul>
