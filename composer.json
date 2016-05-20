@@ -1,7 +1,7 @@
 {
   "name": "donny5300/modulair-router",
-  "description": "Laravel IDE Helper, generates correct PHPDocs for all Facade classes, to improve auto-completion.",
-  "keywords": ["laravel", "autocomplete", "ide", "helper", "phpstorm", "netbeans", "sublime", "codeintel", "phpdoc"],
+  "description": "Laravel Modulair routing mechanism.",
+  "keywords": ["laravel", "routing", "modules", "system management"],
   "license": "MIT",
   "authors": [
     {
