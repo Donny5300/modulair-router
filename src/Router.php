@@ -20,15 +20,42 @@ class Router extends IlluminateRouter
 	 * @var
 	 */
 	private $appNamespace;
+	/**
+	 * @var
+	 */
 	private $namespace;
+	/**
+	 * @var
+	 */
 	private $module;
+	/**
+	 * @var
+	 */
 	private $controller;
+	/**
+	 * @var
+	 */
 	private $action;
+	/**
+	 * @var
+	 */
 	private $guid;
 
+	/**
+	 * @var
+	 */
 	private $breadcrumbs;
+	/**
+	 * @var
+	 */
 	private $config;
+	/**
+	 * @var
+	 */
 	private $method;
+	/**
+	 * @var
+	 */
 	private $controllerClass;
 
 
@@ -43,6 +70,9 @@ class Router extends IlluminateRouter
 		parent::__construct( $events, $container );
 	}
 
+	/**
+	 *
+	 */
 	public function dynamicResourceBindings()
 	{
 		$this->config = config( 'modulair-router' );
