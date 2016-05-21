@@ -42,6 +42,11 @@ class PathBuilder
 		return $this->cache->forever( 'system_router_tree', $collection );
 	}
 
+	/**
+	 * Gets all the routes from the cache
+	 *
+	 * @return mixed
+	 */
 	public function getCachedCollection()
 	{
 		if( $this->cache->has( 'system_router_tree' ) )
@@ -95,6 +100,12 @@ class PathBuilder
 		return $routes;
 	}
 
+	/**
+	 * Extract all the routes from the Live environment
+	 *
+	 * @param null $url
+	 * @return array
+	 */
 	public function getFromEnvironment( $url = null )
 	{
 		$contents = file_get_contents( 'http://playground.dev/system/modulair-system' );
@@ -103,10 +114,31 @@ class PathBuilder
 
 	}
 
+	/**
+	 * Gets the extra options
+	 *
+	 * @param $item
+	 * @return array
+	 */
 	private function extractOptions( $item )
 	{
-		return [
-			'is_deleted' => !is_null( $item['deleted_at'] )
+		$options = [
+			'is_deleted'     => !is_null( $item['deleted_at'] ),
+			'is_online'      => ( $item['is_online'] ),
+			'developer_only' => ( $item['developer_only'] ),
+			'description'    => $item['description'],
 		];
+
+		if( array_key_exists( 'method', $item ) )
+		{
+			$options['method'] = $item['method'];
+		}
+
+		if( array_key_exists( 'is_visible', $item ) )
+		{
+			$options['is_visible'] = ( $item['is_visible'] );
+		}
+
+		return $options;
 	}
 }

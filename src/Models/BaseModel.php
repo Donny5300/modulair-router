@@ -8,8 +8,10 @@ class BaseModel extends Model
 {
 
 	use SoftDeletes;
-	
+
 	private static $methods = [ 'created', 'updated', 'deleted' ];
+
+	protected $hidden = [ 'uuid', 'created_at', 'updated_at', 'id', 'module_id', 'controller_id', 'namespace_id' ];
 
 	public static function boot()
 	{

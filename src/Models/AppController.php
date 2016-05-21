@@ -15,6 +15,7 @@
 		 */
 		protected $fillable = [ 'uuid', 'module_id', 'title' ];
 
+
 		/**
 		 * @param      $request
 		 * @param null $uuid

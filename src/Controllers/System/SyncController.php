@@ -3,6 +3,7 @@
 use Donny5300\ModulairRouter\Models;
 use Donny5300\ModulairRouter\Models\AppNamespace;
 use Donny5300\ModulairRouter\PathBuilder;
+use Donny5300\ModulairRouter\RouteSynchroniser;
 use Illuminate\Http\Request;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
@@ -41,23 +42,20 @@ class SyncController extends BaseController
 			->withTrashed()
 			->with( [ 'modules'              => function ( $q )
 			{
-				$q->withTrashed()
-					->select( [ 'id', 'title', 'deleted_at', 'namespace_id' ] );
+				$q->withTrashed();
 			}, 'modules.controllers'         => function ( $q )
 			{
-				$q->withTrashed()
-					->select( [ 'id', 'title', 'deleted_at', 'module_id' ] );
+				$q->withTrashed();
 
 			}, 'modules.controllers.methods' => function ( $q )
 			{
-				$q->withTrashed()
-					->select( [ 'id', 'title', 'deleted_at', 'controller_id' ] );
+				$q->withTrashed();
 			}
 			] )
-			->get( [ 'id', 'title', 'deleted_at' ] );
+			->get(  );
+
 
 		return $items;
-//		return ( new PathBuilder() )->renderRouteList( $items );
 	}
 
 	/**
@@ -65,26 +63,51 @@ class SyncController extends BaseController
 	 */
 	public function sync()
 	{
+		return $this->output( 'sync', compact( 'devRoutes', 'envRoutes', 'routes' ) );
+	}
+
+	public function dev()
+	{
+		return $this->output( 'dev', compact( 'devRoutes', 'envRoutes', 'routes' ) );
+	}
+
+	public function live()
+	{
 		$data = $this->namespace
 			->with( [ 'modules'              => function ( $q )
 			{
-				$q->withTrashed()
-					->select( [ 'id', 'title', 'deleted_at', 'namespace_id' ] );
+				$q->withTrashed();
 			}, 'modules.controllers'         => function ( $q )
 			{
-				$q->withTrashed()
-					->select( [ 'id', 'title', 'deleted_at', 'module_id' ] );
+				$q->withTrashed();
 
 			}, 'modules.controllers.methods' => function ( $q )
 			{
-				$q->withTrashed()
-					->select( [ 'id', 'title', 'deleted_at', 'controller_id' ] );
+				$q->withTrashed();
 			}
-			] )->withTrashed()->get();
+			] )
+			->withTrashed()
+			->get();
 
-		$devRoutes = $this->pathBuilder->renderRouteList( $data );
-		$envRoutes = $this->pathBuilder->getFromEnvironment();
+		$devRoutes  = $this->pathBuilder->renderRouteList( $data );
+		$liveRoutes = $this->pathBuilder->getFromEnvironment();
 
-		return $this->output( 'sync', compact( 'devRoutes', 'envRoutes' ) );
+		return $this->output( 'live', compact( 'liveRoutes', 'devRoutes' ) );
+	}
+
+	public function doLiveSync( Request $request )
+	{
+		$syncer  = new RouteSynchroniser();
+		$routes  = $request->get( 'route', [ ] );
+		$deletes = $request->get( 'is_deleted', [ ] );
+
+		foreach( $routes as $key => $route )
+		{
+			$syncer
+				->setIsDeleted( $deletes, $key )
+				->syncRoute( $route );
+		}
+
+
 	}
 }

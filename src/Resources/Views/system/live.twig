@@ -1,0 +1,44 @@
+<h1>Van Playground naar Packages</h1>
+
+<form action="/system/sync/live" method="post">
+
+	{{ csrf_field() }}
+	<table width="800" border="1" cellpadding="5">
+		<tr>
+			<td>Select</td>
+			<td>Route</td>
+			<td>Deleted</td>
+			<td>Location</td>
+		</tr>
+		{% for path,options in liveRoutes %}
+
+			{% if devRoutes[path].is_deleted != options.is_deleted or not devRoutes[path] %}
+				<tr>
+					<td>
+						<input type="checkbox" value="{{ path }}" name="route[{{ loop.index0 }}]">
+					</td>
+					<td>{{ path }}</td>
+					<td>
+						{% if not devRoutes[path] %}
+							Does not exist
+						{% else %}
+							{{ dump(options) }}
+							{{ options.is_deleted ? 'Deleted' : 'Not deleted' }}
+							<input type="text" name="is_deleted[{{ loop.index0 }}]" value="{{ options.is_deleted ? 1 : 0 }}">
+
+						{% endif %}
+					</td>
+					<td>{{ options.environment }}</td>
+				</tr>
+			{% endif %}
+
+		{% endfor %}
+
+		<tr>
+			<td colspan="4" align="center">
+				<input type="submit" value="Sync!">
+			</td>
+		</tr>
+	</table>
+
+</form>

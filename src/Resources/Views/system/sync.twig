@@ -1,39 +1,4 @@
-<h1>Live</h1>
-<table width="800" border="1" cellpadding="5">
-	<tr>
-		<td>Select</td>
-		<td>Route</td>
-		<td>Deleted</td>
-		<td>In dev</td>
-	</tr>
-	{% for path,options in envRoutes %}
-
-		<tr>
-			<td></td>
-			<td>{{ path }}</td>
-			<td>{{ options.is_deleted ? 'Deleted' : 'Not deleted' }}</td>
-			<td>{{ devRoutes[path] ? 'Yes' : 'No' }}</td>
-		</tr>
-
-	{% endfor %}
-</table>
-
-<br><br><br><br>
-<h1>Dev</h1>
-
-<table width="800" border="1" cellpadding="5">
-	<tr>
-		<td>Select</td>
-		<td>Route</td>
-		<td>Deleted</td>
-	</tr>
-	{% for path,options in devRoutes %}
-
-		<tr>
-			<td></td>
-			<td>{{ path }}</td>
-			<td>{{ options.is_deleted ? 'Deleted' : 'Not deleted' }}</td>
-		</tr>
-	{% endfor %}
-	
-</table>
+<ul>
+	<li><a href="/system/sync/live">From live to dev</a></li>
+	<li><a href="/system/sync/dev">From dev to live</a></li>
+</ul>
