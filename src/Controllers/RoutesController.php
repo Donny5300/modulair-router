@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use Donny5300\ModulairRouter\Models;
 
 use Donny5300\ModulairRouter\Models\AppController;
-use Donny5300\ModulairRouter\TreeBuilder;
+use Donny5300\ModulairRouter\PathBuilder;
 use Illuminate\Http\Request;
 
 /**
@@ -27,7 +27,7 @@ class RoutesController extends Controller
 	public function show( Request $request )
 	{
 
-		$tree = ( new TreeBuilder() )->getCachedCollection();
+		$tree = ( new PathBuilder() )->getCachedCollection();
 
 		return view( 'd5300.router::partials.mapping', compact( 'tree' ) );
 

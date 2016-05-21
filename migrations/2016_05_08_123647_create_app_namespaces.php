@@ -3,7 +3,7 @@
 	use Illuminate\Database\Schema\Blueprint;
 	use Illuminate\Database\Migrations\Migration;
 
-	class CreateAppNamespaces extends Migration
+	class CreateAppControllersTable extends Migration
 	{
 		/**
 		 * Run the migrations.
@@ -12,16 +12,6 @@
 		 */
 		public function up()
 		{
-			Schema::create( 'app_namespaces', function ( Blueprint $table )
-			{
-				$table->increments( 'id' );
-				$table->uuid( 'uuid' );
-				$table->string( 'namespace' );
-				$table->text( 'description' );
-				$table->softDeletes();
-				$table->timestamps();
-			} );
-
 			Schema::create( 'app_namespaces', function ( Blueprint $table )
 			{
 				$table->increments( 'id' );
@@ -43,6 +33,7 @@
 				$table->integer( 'namespace_id' );
 				$table->boolean( 'is_online' );
 				$table->boolean( 'developer_only' )->default( false );
+				$table->softDeletes();
 				$table->timestamps();
 			} );
 
@@ -55,6 +46,7 @@
 				$table->integer( 'module_id' );
 				$table->boolean( 'is_online' );
 				$table->boolean( 'developer_only' )->default( false );
+				$table->softDeletes();
 				$table->timestamps();
 			} );
 
@@ -69,6 +61,7 @@
 				$table->boolean( 'developer_only' );
 				$table->boolean( 'is_visible' );
 				$table->string( 'request_method' );
+				$table->softDeletes();
 				$table->timestamps();
 			} );
 		}

@@ -11,7 +11,7 @@ use Donny5300\ModulairRouter\Models\AppNamespace;
  *
  * @package Donny5300\Routing
  */
-class TreeBuilder
+class PathBuilder
 {
 	/**
 	 * TreeBuilder constructor.
@@ -65,6 +65,31 @@ class TreeBuilder
 
 		return $results;
 
+	}
+
+	/**
+	 * @param $namespaces
+	 * @return array
+	 */
+	public function renderRouteList( $namespaces )
+	{
+		$routes = [ ];
+		foreach( $namespaces as $namespace )
+		{
+
+			foreach( $namespace->modules as $module )
+			{
+				foreach( $module->controllers as $controller )
+				{
+					foreach( $controller->methods as $action )
+					{
+						$routes[$action->id] = $namespace->title . '.' . $module->title . '.' . $controller->title . '.' . $action->title;
+					}
+				}
+			}
+		}
+
+		return $routes;
 	}
 
 

@@ -3,7 +3,7 @@
 	use App\Http\Controllers\Controller;
 
 	return [
-		'debug'              => false,
+		'debug'            => true,
 		/**
 		 * Available RequestMethods
 		 */
@@ -73,6 +73,12 @@
 			'modules'     => false,
 			'controllers' => false,
 			'methods'     => false,
-			'exceptions'  => false
+			'exceptions'  => false,
+			'system'      => false
+		],
+		'merge_config'     => [
+			'secure'        => true,
+			'enable'        => true,
+			'security_code' => 'test'
 		]
 	];

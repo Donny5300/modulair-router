@@ -59,6 +59,8 @@
 			Route::post( 'missing-route/create', 'Donny5300\ModulairRouter\Controllers\Exceptions\Database\RouteException@storeRoute' );
 		} );
 
+		Route::get( 'modulair-system', 'Donny5300\ModulairRouter\Controllers\System\SyncController@index' );
+		Route::get( 'sync', 'Donny5300\ModulairRouter\Controllers\System\SyncController@sync' );
 		Route::get( 'mapping', 'Donny5300\ModulairRouter\Controllers\RoutesController@show' );
 		Route::post( 'mapping', 'Donny5300\ModulairRouter\Controllers\RoutesController@show' );
 		Route::get( 'css', 'Donny5300\ModulairRouter\Controllers\AssetController@css' );

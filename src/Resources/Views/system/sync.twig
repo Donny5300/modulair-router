@@ -1,0 +1,30 @@
+<table width="800" border="1" cellpadding="5">
+	<tr>
+		<td>Select</td>
+		<td>Route</td>
+	</tr>
+	{% for item in data  %}
+
+		{% for module in item.modules  %}
+
+			{% for controller in module.controllers %}
+
+				{% for method in controller.methods %}
+
+					<tr>
+					<td>
+						#{{ method.id }} <input type="checkbox" name="action[]" value="{{ method.id }}">
+					</td>
+					<td>
+						{{ item.title }} {{ module.title }} {{ controller.title }} {{ method.title }}
+					</td>
+				</tr>
+
+				{% endfor %}
+
+			{% endfor %}
+
+		{% endfor %}
+
+	{% endfor %}
+</table>

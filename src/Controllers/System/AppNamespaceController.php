@@ -85,6 +85,10 @@ class AppNamespaceController extends BaseController
 		return $this->backWithFailed();
 	}
 
+	/**
+	 * @param $item
+	 * @return bool
+	 */
 	public function deleteFiles( $item )
 	{
 		return ( new FileRemover( $item, File::class ) )->deleteNamespace();
