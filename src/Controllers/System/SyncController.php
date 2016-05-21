@@ -2,6 +2,7 @@
 
 use Donny5300\ModulairRouter\Models;
 use Donny5300\ModulairRouter\Models\AppNamespace;
+use Donny5300\ModulairRouter\PathBuilder;
 use Illuminate\Http\Request;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
@@ -26,7 +27,8 @@ class SyncController extends BaseController
 	public function __construct( AppNamespace $namespace )
 	{
 		parent::__construct();
-		$this->namespace = $namespace;
+		$this->namespace   = $namespace;
+		$this->pathBuilder = new PathBuilder;
 	}
 
 	/**
@@ -63,8 +65,26 @@ class SyncController extends BaseController
 	 */
 	public function sync()
 	{
-		$data = $this->namespace->with( 'modules.controllers.methods' )->get();
+		$data = $this->namespace
+			->with( [ 'modules'              => function ( $q )
+			{
+				$q->withTrashed()
+					->select( [ 'id', 'title', 'deleted_at', 'namespace_id' ] );
+			}, 'modules.controllers'         => function ( $q )
+			{
+				$q->withTrashed()
+					->select( [ 'id', 'title', 'deleted_at', 'module_id' ] );
 
-		return $this->output( 'sync', compact( 'data' ) );
+			}, 'modules.controllers.methods' => function ( $q )
+			{
+				$q->withTrashed()
+					->select( [ 'id', 'title', 'deleted_at', 'controller_id' ] );
+			}
+			] )->withTrashed()->get();
+
+		$devRoutes = $this->pathBuilder->renderRouteList( $data );
+		$envRoutes = $this->pathBuilder->getFromEnvironment();
+
+		return $this->output( 'sync', compact( 'devRoutes', 'envRoutes' ) );
 	}
 }

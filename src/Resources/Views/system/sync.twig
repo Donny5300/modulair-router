@@ -1,30 +1,38 @@
+<h1>Live</h1>
 <table width="800" border="1" cellpadding="5">
 	<tr>
 		<td>Select</td>
 		<td>Route</td>
+		<td>Deleted</td>
+		<td>In dev</td>
 	</tr>
-	{% for item in data  %}
+	{% for path,options in envRoutes %}
 
-		{% for module in item.modules  %}
+		<tr>
+			<td></td>
+			<td>{{ path }}</td>
+			<td>{{ options.is_deleted ? 'Deleted' : 'Not deleted' }}</td>
+			<td>{{ devRoutes[path] ? 'Yes' : 'No' }}</td>
+		</tr>
 
-			{% for controller in module.controllers %}
+	{% endfor %}
+</table>
 
-				{% for method in controller.methods %}
+<br><br><br><br>
+<h1>Dev</h1>
 
-					<tr>
-					<td>
-						#{{ method.id }} <input type="checkbox" name="action[]" value="{{ method.id }}">
-					</td>
-					<td>
-						{{ item.title }} {{ module.title }} {{ controller.title }} {{ method.title }}
-					</td>
-				</tr>
+<table width="800" border="1" cellpadding="5">
+	<tr>
+		<td>Select</td>
+		<td>Route</td>
+		<td>Deleted</td>
+	</tr>
+	{% for path,options in devRoutes %}
 
-				{% endfor %}
-
-			{% endfor %}
-
-		{% endfor %}
-
+		<tr>
+			<td></td>
+			<td>{{ path }}</td>
+			<td>{{ options.is_deleted ? 'Deleted' : 'Not deleted' }}</td>
+		</tr>
 	{% endfor %}
 </table>

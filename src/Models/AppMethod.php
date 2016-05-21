@@ -47,7 +47,19 @@
 		 */
 		public function storeFromException( $request, $controllerId )
 		{
-			$item = $this->firstOrNew( [ 'controller_id' => $controllerId, 'title' => $request->action ] );
+			$item = $this->withTrashed()->firstOrNew( [ 'controller_id' => $controllerId, 'title' => $request->action ] );
+
+
+			if( $item->exists )
+			{
+				if( $item->restore() )
+				{
+					return $item;
+				}
+
+				return false;
+
+			}
 
 			$item->uuid = generate_uuid();
 

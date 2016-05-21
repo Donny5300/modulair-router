@@ -1,27 +1,68 @@
 <h1>{{ exception.getMessage() }}</h1>
 
+<p>When creating this route, soft deletes will be restored!</p>
 <form action="/system/exceptions/missing-route/create" method="post">
 	{{ csrf_field() }}
 	<table>
 		<tr>
 			<td>Namespace:</td>
-			<td><input type="text" name="namespace" readonly value="{{ namespace }}"></td>
-			<td>{{ hasNamespace ? 'Found' : 'Not found' }}</td>
+			<td><input type="text" name="namespace" readonly value="{{ namespace.title ? namespace.title : routeParams.namespace }}"></td>
+			<td>
+				{% if namespace %}
+					{% if namespace.deleted_at %}
+						Namespace is soft deleted
+					{% else %}
+						Namespace is gevonden
+					{% endif %}
+				{% else %}
+					Namespace niet gevonden ook niet soft delete
+				{% endif %}
+			</td>
 		</tr>
 		<tr>
 			<td>Module:</td>
-			<td><input type="text" name="module" readonly value="{{ module }}"></td>
-			<td>{{ hasModule ? 'Found' : 'Not found' }}</td>
+			<td><input type="text" name="module" readonly value="{{ module.title ? module.title : routeParams.module }}"></td>
+			<td>
+				{% if module %}
+					{% if module.deleted_at %}
+						Module is soft deleted
+					{% else %}
+						Module is gevonden
+					{% endif %}
+				{% else %}
+					Module niet gevonden ook niet soft delete
+				{% endif %}
+			</td>
 		</tr>
 		<tr>
 			<td>Controller:</td>
-			<td><input type="text" name="controller" readonly value="{{ controller }}"></td>
-			<td>{{ hasController ? 'Found' : 'Not found' }}</td>
+			<td><input type="text" name="controller" readonly value="{{ controller.title ? controller.title : routeParams.controller }}"></td>
+			<td>
+				{% if controller %}
+					{% if controller.deleted_at %}
+						Controller is soft deleted
+					{% else %}
+						Controller is gevonden
+					{% endif %}
+				{% else %}
+					Controller niet gevonden ook niet soft delete
+				{% endif %}
+			</td>
 		</tr>
 		<tr>
 			<td>Method:</td>
-			<td><input type="text" name="action" value="{{ method }}"></td>
-			<td>{{ hasMethod ? 'Found' : 'Not found' }}</td>
+			<td><input type="text" name="action" value="{{ method.title ? method.title : routeParams.action }}"></td>
+			<td>
+				{% if method %}
+					{% if method.deleted_at %}
+						Method is soft deleted
+					{% else %}
+						Method is gevonden
+					{% endif %}
+				{% else %}
+					Method niet gevonden ook niet soft delete
+				{% endif %}
+			</td>
 		</tr>
 
 		<tr>

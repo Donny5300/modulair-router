@@ -40,40 +40,40 @@ class RouteException extends BaseController
 	public function missingRoute( $exception )
 	{
 		$routeParams = $exception->getArguments();
-		$namespace   = $routeParams['namespace'];
-		$controller  = $routeParams['controller'];
-		$module      = $routeParams['module'];
-		$method      = $routeParams['action'];
 
-		$hasNamespace = $this->namespace
+		$namespace = $this->namespace
 			->where( 'title', $routeParams['namespace'] )
+			->withTrashed()
 			->first();
 
-		if( $hasNamespace )
+		if( $namespace )
 		{
-			$hasModule = $this->module
-				->where( 'namespace_id', $hasNamespace->id )
+			$module = $this->module
+				->where( 'namespace_id', $namespace->id )
 				->where( 'title', $routeParams['module'] )
+				->withTrashed()
 				->first();
 		}
 
-		if( isset( $hasModule ) )
+		if( isset( $module ) )
 		{
-			$hasController = $this->controller
-				->where( 'module_id', $hasModule->id )
+			$controller = $this->controller
+				->where( 'module_id', $module->id )
 				->where( 'title', $routeParams['controller'] )
+				->withTrashed()
 				->first();
 		}
 
-		if( isset( $hasController ) )
+		if( isset( $controller ) )
 		{
-			$hasMethod = $this->method
-				->where( 'controller_id', $hasController->id ?? false )
+			$method = $this->method
+				->where( 'controller_id', $controller->id ?? false )
 				->where( 'title', $routeParams['action'] )
+				->withTrashed()
 				->first();
 		}
 
-		$output = $this->output( 'route_not_found', compact( 'hasNamespace', 'hasModule', 'hasController', 'hasMethod', 'exception', 'routeParams', 'namespace', 'module', 'controller', 'method' ) );
+		$output = $this->output( 'route_not_found', compact( 'namespace', 'module', 'controller', 'method', 'exception', 'routeParams', 'namespace', 'module', 'controller', 'method' ) );
 
 		return response( $output );
 	}

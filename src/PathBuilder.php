@@ -74,16 +74,19 @@ class PathBuilder
 	public function renderRouteList( $namespaces )
 	{
 		$routes = [ ];
+
 		foreach( $namespaces as $namespace )
 		{
-
-			foreach( $namespace->modules as $module )
+			$routes[$namespace['title']] = $this->extractOptions( $namespace );
+			foreach( $namespace['modules'] as $module )
 			{
-				foreach( $module->controllers as $controller )
+				$routes[$namespace['title'] . '.' . $module['title']] = $this->extractOptions( $module );
+				foreach( $module['controllers'] as $controller )
 				{
-					foreach( $controller->methods as $action )
+					$routes[$namespace['title'] . '.' . $module['title'] . '.' . $controller['title']] = $this->extractOptions( $controller );
+					foreach( $controller['methods'] as $action )
 					{
-						$routes[$action->id] = $namespace->title . '.' . $module->title . '.' . $controller->title . '.' . $action->title;
+						$routes[$namespace['title'] . '.' . $module['title'] . '.' . $controller['title'] . '.' . $action['title']] = $this->extractOptions( $action );
 					}
 				}
 			}
@@ -92,5 +95,18 @@ class PathBuilder
 		return $routes;
 	}
 
+	public function getFromEnvironment( $url = null )
+	{
+		$contents = file_get_contents( 'http://playground.dev/system/modulair-system' );
 
+		return $this->renderRouteList( json_decode( $contents, true ) );
+
+	}
+
+	private function extractOptions( $item )
+	{
+		return [
+			'is_deleted' => !is_null( $item['deleted_at'] )
+		];
+	}
 }
