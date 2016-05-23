@@ -40,7 +40,7 @@ class AppNamespace extends BaseModel
 	 */
 	public function storeFromException( $request )
 	{
-		$item = $this->firstOrNew( [ 'title' => $request->namespace ] );
+		$item = $this->withTrashed()->firstOrNew( [ 'title' => $request->namespace ] );
 
 		$item->uuid = generate_uuid();
 

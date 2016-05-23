@@ -43,8 +43,11 @@ class BaseController extends Controller
 	public function output( $view = false, $data = [ ] )
 	{
 		$config = $this->config;
+		$data   = array_merge( $config, $data );
 
-		return view( $this->buildPath( $view ), array_merge( $config, $data ) );
+		$data['view'] = view( $this->buildPath( $view ), $data );
+
+		return view( 'd5300.router::master', $data );
 	}
 
 	/**

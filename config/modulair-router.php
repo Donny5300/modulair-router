@@ -63,22 +63,25 @@
 			'namespaces'  => 'namespaces',
 			'controllers' => 'controllers',
 			'modules'     => 'modules',
-			'methods'     => 'methods'
+			'methods'     => 'methods',
+			'exceptions'  => 'exceptions/handler',
+			'sync'        => 'sync'
 		],
 		/**
 		 * Add custom views without publishing the controllers
 		 */
 		'system_views'     => [
+			#'user' => 'users.management', See readme.md for example
 			'namespaces'  => false,
 			'modules'     => false,
 			'controllers' => false,
 			'methods'     => false,
 			'exceptions'  => false,
-			'system'      => false
+			'system'      => false,
+			'sync'        => false,
 		],
 		'merge_config'     => [
-			'secure'        => true,
-			'enable'        => true,
-			'security_code' => 'test'
+			'enable' => true,
+			'default_path' => 'http://playground.dev/system/modulair-system'
 		]
 	];

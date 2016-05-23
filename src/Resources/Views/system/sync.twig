@@ -1,4 +1,71 @@
-<ul>
-	<li><a href="/system/sync/live">From live to dev</a></li>
-	<li><a href="/system/sync/dev">From dev to live</a></li>
-</ul>
+<form action="/system/sync" method="post" class="form-horizontal">
+	{{ csrf_field() }}
+	<div class="form-group">
+		<label for="" class="control-label col-sm-2">
+			<div class="text-left">
+				Domain with path:
+			</div>
+		</label>
+		<div class="col-sm-8">
+			<input type="text" size="50" name="path" value="{{ old('path') }}" class="form-control">
+		</div>
+		<div class="col-sm-2">
+			<input type="submit" value="Retrieve data" class="btn btn-block btn-success">
+		</div>
+	</div>
+
+	<div>
+	</div>
+</form>
+
+{% if session('message') %}
+	<h1 class="text-success text-center">{{ session('message') }}</h1>
+{% endif %}
+
+<form action="/system/sync/save" method="post">
+
+	{{ csrf_field() }}
+	<table class="table table-responsive">
+		<thead>
+			<tr>
+				<th>Select</th>
+				<th>Route</th>
+				<th>Deleted</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for path,options in liveRoutes if devRoutes[path].is_deleted != options.is_deleted or not devRoutes[path] %}
+
+				<tr>
+					<td>
+						<input type="checkbox" value="{{ path }}" name="route[{{ loop.index0 }}]">
+					</td>
+					<td>{{ path }}</td>
+					<td>
+						{% if not devRoutes[path] %}
+							<span class="label label-default">Does not exist</span>
+						{% else %}
+							<span class="label label-{{ options.is_deleted ? 'warning' : 'danger' }}">{{ options.is_deleted ? 'Deleted' : 'Not deleted' }}</span>
+							<input type="hidden" name="is_deleted[{{ loop.index0 }}]" value="{{ options.is_deleted ? 1 : 0 }}">
+
+						{% endif %}
+					</td>
+				</tr>
+
+			{% else %}
+				<tr>
+					<td colspan="5" class="text-center text-success"><b>There is nothing to sync!</b></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+
+		<tfoot>
+			<tr>
+				<td colspan="5" align="center">
+					<input type="submit" value="Sync!" class="btn btn-success btn-block">
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+
+</form>

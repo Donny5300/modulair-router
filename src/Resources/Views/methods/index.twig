@@ -1,12 +1,10 @@
-{% include 'd5300.router::partials.menu' %}
-
-<table border="1">
+<table class="table table-responsive">
 	<thead>
 		<tr>
-			<td style="width: 50px;"># ID</td>
-			<td style="width: 400px;">Title</td>
-			<td style="width: 400px;">Module</td>
-			<td style="width: 100px;">Actions</td>
+			<td># ID</td>
+			<td>Title</td>
+			<td>Module</td>
+			<td>Actions</td>
 		</tr>
 	</thead>
 
@@ -17,16 +15,13 @@
 				<td>{{ item.title }}</td>
 				<td>{{ item.controller.title }}</td>
 				<td>
-					<a href="/system/methods/{{ item.uuid }}/edit">Edit</a>
 
-					<form action="/system/methods/{{ item.uuid }}" method="post">
+					<form action="/system/methods/{{ item.uuid }}" method="post" class="btn-group">
+						<a href="/system/methods/{{ item.uuid }}/edit" class="btn btn-info">Edit</a>
 						{{ csrf_field() }}
-						<input type="submit" value="Delete">
+						<input type="submit" value="Delete" class="btn btn-danger">
 					</form>
 				</td>
-			</tr>
-			<tr>
-				<td colspan="4">{{ item.description ? item.description : 'No description for this namespace' }}</td>
 			</tr>
 		{% endfor %}
 	</tbody>

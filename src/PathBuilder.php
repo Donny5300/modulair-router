@@ -108,7 +108,8 @@ class PathBuilder
 	 */
 	public function getFromEnvironment( $url = null )
 	{
-		$contents = file_get_contents( 'http://playground.dev/system/modulair-system' );
+
+		$contents = file_get_contents( $url );
 
 		return $this->renderRouteList( json_decode( $contents, true ) );
 

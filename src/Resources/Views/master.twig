@@ -1,0 +1,91 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/system/css">
+
+	</head>
+<body>
+
+    <!-- Navigation -->
+
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+	<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+
+			<a class="navbar-brand" href="#">D5300 Router</a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				{% for item in {0: {title: 'Namespaces'}, 1: {title: 'Modules'},2: {title: 'Controllers'}, 3: {title: 'Methods'}} %}
+
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ item.title }}
+							<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/{{ system_routes.base_path }}/{{ system_routes[(item.title | lower)] }}">Index</a></li>
+							<li><a href="/{{ system_routes.base_path }}/{{ system_routes[(item.title | lower)] }}/create">Add new</a></li>
+						</ul>
+					</li>
+				{% endfor %}
+
+
+
+			</ul>
+			<ul class="nav navbar-nav pull-right">
+				<li>
+					<a href="/{{ system_routes.base_path }}/{{ system_routes.sync }}">Sync</a>
+				</li>
+				<li>
+					<a href="/{{ system_routes.base_path }}/clean-up">Clean up</a>
+				</li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+
+	<!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-sm-12">
+				{% include 'd5300.router::partials.errors' %}
+
+				{{ view | raw }}
+			</div>
+
+        </div>
+		<!-- /.row -->
+
+        <hr>
+
+		<!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Package D5300 Router</p>
+                </div>
+				<!-- /.col-lg-12 -->
+            </div>
+			<!-- /.row -->
+        </footer>
+
+    </div>
+	<!-- /.container -->
+
+
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>

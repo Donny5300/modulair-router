@@ -1,3 +1,7 @@
+footer {
+	margin: 50px 0;
+}
+
 .menu li, .menu ul
 {
 	display: inline-block;
@@ -8,4 +12,15 @@
 .menu ul
 {
 	padding-right: 50px;
+}
+
+.online
+{
+	color: green;
+	font-weight: bold;
+}
+
+.offline
+{
+	color: red;
 }

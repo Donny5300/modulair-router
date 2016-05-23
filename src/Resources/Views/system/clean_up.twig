@@ -1,0 +1,22 @@
+<div class="text-center">
+
+	{% if not session('message') %}
+			<h1>WARNING</h1>
+			<p class="text-warning">Restoring all the routes will set <b>ALL</b> softdeleted items to <b>NULL</b></p>
+			<p class="text-danger">Deleting all the routes will <b>FORCE</b> delete all softdeleted items</p>
+		</div>
+
+		<div class="row clearfix">
+			<div class="col-sm-6">
+				<a href="/{{ system_routes.base_path }}/clean-up/restore-all" class="btn btn btn-block btn-success">Restore all</a>
+			</div>
+
+			<div class="col-sm-6">
+				<a href="/{{ system_routes.base_path }}/clean-up/delete-all" class="btn btn btn-block btn-danger">Delete all</a>
+			</div>
+
+	{% else %}
+		<h1 class="text-success">{{ session('message') }}</h1>
+	{% endif %}
+
+</div>

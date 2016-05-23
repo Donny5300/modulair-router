@@ -1,62 +1,55 @@
-{% include 'd5300.router::partials.menu' %}
-{% include 'd5300.router::partials.errors' %}
+<form action="/system/controllers/{{ item.uuid }}/edit" method="post" class="form-horizontal">
 
-<form action="/system/controllers/{{item.uuid}}/edit" method="post">
+	{{ csrf_field() }}
+	<div class="form-group">
+		<label for="" class="col-sm-4 control-label">Title</label>
+		<div class="col-sm-8">
+			<input type="text" name="title" placeholder="Namespace title" value="{{ old('title', item.title) }}" class="form-control">
+		</div>
+	</div>
 
-	{{csrf_field()}}
-	<table border="1" width="960" cellpadding="10">
-		<thead>
-			<tr>
-				<th colspan="2">Edit controller</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>Title</td>
-				<td>
-					<input type="text" name="title" placeholder="Controller title" value="{{ old('title', item.title) }}">
-				</td>
-			</tr>
-			<tr>
-				<td>Developer only</td>
-				<td>
-					<select name="developer_only" id="">
-						<option value="0" {{ old('developer_only', item.developer_only) == 0 ? 'selected' }}>No</option>
-						<option value="1" {{ old('developer_only', item.developer_only) == 1 ? 'selected' }}>Yes</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Is online</td>
-				<td>
-					<select name="is_online" id="">
-						<option value="0" {{ old('is_online', item.is_online) == 0 ? 'selected' }}>No</option>
-						<option value="1" {{ old('is_online', item.is_online) == 1 ? 'selected' }}>Yes</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Description</td>
-				<td>
-					<textarea name="description" id="" cols="60" rows="10">{{ old('description', item.description) }}</textarea>
-				</td>
-			</tr>
-			<tr>
-				<td>Module</td>
-				<td>
-					<select name="module_id" id="">
-						{% for key, value in modules %}
-							<option value="{{ key }}" {{ old('module_id', item.module_id) == key ? 'selected' }}>{{ value }}</option>
-						{% endfor %}
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td>
-					<input type="submit" value="Save">
-				</td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="form-group">
+		<label for="" class="col-sm-4 control-label">Developer only</label>
+		<div class="col-sm-8">
+			<select name="developer_only" id="" class="form-control">
+				<option value="0" {{ old('developer_only', item.developer_only) == 0 ? 'selected' }}>No</option>
+				<option value="1" {{ old('developer_only', item.developer_only) == 1 ? 'selected' }}>Yes</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="" class="col-sm-4 control-label">Is online</label>
+		<div class="col-sm-8">
+			<select name="is_online" id="" class="form-control">
+				<option value="0" {{ old('is_online', item.is_online) == 0 ? 'selected' }}>No</option>
+				<option value="1" {{ old('is_online', item.is_online) == 1 ? 'selected' }}>Yes</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="" class="col-sm-4 control-label">Description</label>
+		<div class="col-sm-8">
+			<textarea name="description" class="form-control">{{ old('description', item.description) }}</textarea>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="" class="control-label col-sm-4">Select namespace</label>
+		<div class="col-sm-8">
+			<select name="module_id" id="" class="form-control">
+				<option value="">Make a choice</option>
+				{% for key, value in modules %}
+					<option value="{{ key }}" {{ key == old('module_id', item.module_id) ? 'selected' }}>{{ value }}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-sm-8 col-sm-offset-4">
+			<input type="submit" value="Save" class="btn btn-success">
+		</div>
+	</div>
 </form>

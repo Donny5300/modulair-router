@@ -62,9 +62,7 @@ class RouteSynchroniser
 			}
 		}
 
-		dd( 'File: ' . __FILE__, 'Line: ' . __LINE__, $chunks );
-
-		return $this;
+		return true;
 
 	}
 
@@ -82,7 +80,7 @@ class RouteSynchroniser
 	 * @param $key
 	 * @return $this
 	 */
-	public function setIsDeleted( $deleted, $key )
+	public function setIsDeleted( array $deleted, $key )
 	{
 		if( array_key_exists( $key, $deleted ) )
 		{
@@ -102,7 +100,6 @@ class RouteSynchroniser
 	 */
 	public function createOrDeleteNamespace( $title )
 	{
-
 		if( isset( $this->deleted ) )
 		{
 			if( $this->deleted )
@@ -129,7 +126,7 @@ class RouteSynchroniser
 
 		if( $item->delete() )
 		{
-			
+
 			return $item;
 		}
 
@@ -143,7 +140,7 @@ class RouteSynchroniser
 	public function restoreNamespace( $namespace )
 	{
 		$item = $this->namespace->where( 'title', $namespace )->withTrashed()->first();
-
+		
 		if( $item->restore() )
 		{
 			return $item;
@@ -170,10 +167,10 @@ class RouteSynchroniser
 			return $this->restoreModule( $module, $namespaceId );
 		}
 
-		$item        = new stdClass();
-		$item->title = $module;
+		$item         = new stdClass();
+		$item->module = $module;
 
-		return $this->module->storeFromException( $item );
+		return $this->module->storeFromException( $item, $namespaceId );
 	}
 
 
@@ -216,10 +213,10 @@ class RouteSynchroniser
 
 	/**
 	 * @param $controller
-	 * @param $namespaceId
+	 * @param $moduleId
 	 * @return bool|stdClass
 	 */
-	private function createOrDeleteController( $controller, $namespaceId )
+	private function createOrDeleteController( $controller, $moduleId )
 	{
 		if( isset( $this->deleted ) )
 		{
@@ -228,13 +225,13 @@ class RouteSynchroniser
 				return $this->deleteController( $controller );
 			}
 
-			return $this->restoreController( $controller, $namespaceId );
+			return $this->restoreController( $controller, $moduleId );
 		}
 
-		$item        = new stdClass();
-		$item->title = $controller;
+		$item             = new stdClass();
+		$item->controller = $controller;
 
-		return $this->controller->storeFromException( $item );
+		return $this->controller->storeFromException( $item, $moduleId );
 	}
 
 
@@ -277,10 +274,10 @@ class RouteSynchroniser
 
 	/**
 	 * @param $action
-	 * @param $namespaceId
+	 * @param $controllerId
 	 * @return bool|stdClass
 	 */
-	private function createOrDeleteAction( $action, $namespaceId )
+	private function createOrDeleteAction( $action, $controllerId )
 	{
 		if( isset( $this->deleted ) )
 		{
@@ -289,13 +286,13 @@ class RouteSynchroniser
 				return $this->deleteAction( $action );
 			}
 
-			return $this->restoreAction( $action, $namespaceId );
+			return $this->restoreAction( $action, $controllerId );
 		}
 
-		$item        = new stdClass();
-		$item->title = $action;
+		$item         = new stdClass();
+		$item->action = $action;
 
-		return $this->method->storeFromException( $item );
+		return $this->method->storeFromException( $item, $controllerId );
 	}
 
 
@@ -308,7 +305,7 @@ class RouteSynchroniser
 	{
 		$item = $this->method
 			->where( 'title', $action )
-			->where( 'module_id', $moduleId )
+			->where( 'controller_id', $moduleId )
 			->withTrashed()
 			->first();
 

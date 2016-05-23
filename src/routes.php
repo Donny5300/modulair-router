@@ -52,19 +52,29 @@
 			Route::post( '/{uuid}', 'Donny5300\ModulairRouter\Controllers\System\AppMethodsController@destroy' );
 		} );
 
-		Route::group( [ 'prefix' => 'exceptions', 'middleware' => 'routeDevelopmentMode' ], function ()
+		Route::group( [ 'prefix' => $config['exceptions'], 'middleware' => 'routeDevelopmentMode' ], function ()
 		{
 			Route::post( 'controller/create', 'Donny5300\ModulairRouter\Controllers\Exceptions\ControllerNotFoundExceptionController@createMissingController' );
 			Route::get( 'views/create', 'Donny5300\ModulairRouter\Controllers\Exceptions\ViewNotFoundExceptionController@createMissingView' );
 			Route::post( 'missing-route/create', 'Donny5300\ModulairRouter\Controllers\Exceptions\Database\RouteException@storeRoute' );
 		} );
 
+		Route::group( [ 'middleware' => 'routeDevelopmentMode' ], function ()
+		{
+			Route::get( 'clean-up', 'Donny5300\ModulairRouter\Controllers\System\CleanUpController@index' );
+			Route::get( 'clean-up/delete-all', 'Donny5300\ModulairRouter\Controllers\System\CleanUpController@deleteAll' );
+			Route::get( 'clean-up/restore-all', 'Donny5300\ModulairRouter\Controllers\System\CleanUpController@restoreAll' );
+		} );
+
+		Route::group( [ 'prefix' => $config['sync'] ], function ()
+		{
+			Route::get( '/', 'Donny5300\ModulairRouter\Controllers\System\SyncController@sync' );
+			Route::post( '/', 'Donny5300\ModulairRouter\Controllers\System\SyncController@sync' );
+			Route::post( 'save', 'Donny5300\ModulairRouter\Controllers\System\SyncController@doSync' );
+		} );
+
 		Route::get( 'modulair-system', 'Donny5300\ModulairRouter\Controllers\System\SyncController@index' );
 
-		Route::get( 'sync', 'Donny5300\ModulairRouter\Controllers\System\SyncController@sync' );
-		Route::get( 'sync/dev', 'Donny5300\ModulairRouter\Controllers\System\SyncController@dev' );
-		Route::get( 'sync/live', 'Donny5300\ModulairRouter\Controllers\System\SyncController@live' );
-		Route::post( 'sync/live', 'Donny5300\ModulairRouter\Controllers\System\SyncController@doLiveSync' );
 
 		Route::get( 'mapping', 'Donny5300\ModulairRouter\Controllers\RoutesController@show' );
 		Route::post( 'mapping', 'Donny5300\ModulairRouter\Controllers\RoutesController@show' );

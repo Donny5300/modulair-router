@@ -1,6 +1,7 @@
 <?php namespace Donny5300\ModulairRouter\Controllers\Exceptions;
 
 use App\Http\Controllers\Controller;
+use Donny5300\ModulairRouter\Controllers\System\BaseController;
 use Donny5300\ModulairRouter\Models;
 use Donny5300\ModulairRouter\Router;
 use Illuminate\Console\AppNamespaceDetectorTrait;
@@ -11,7 +12,7 @@ use Illuminate\Filesystem\Filesystem;
  *
  * @package Donny5300\Routing\Controllers
  */
-class ActionNotFoundExceptionController extends Controller
+class ActionNotFoundExceptionController extends BaseController
 {
 	use AppNamespaceDetectorTrait;
 	/**
@@ -24,6 +25,8 @@ class ActionNotFoundExceptionController extends Controller
 	 */
 	protected $controllerName;
 
+	protected $viewPath = 'exceptions';
+
 	/**
 	 * ExceptionController constructor.
 	 *
@@ -31,6 +34,7 @@ class ActionNotFoundExceptionController extends Controller
 	 */
 	public function __construct( Filesystem $fs )
 	{
+		parent::__construct();
 		$this->fs     = $fs;
 		$this->config = config( 'modulair-router' );
 	}
@@ -43,7 +47,7 @@ class ActionNotFoundExceptionController extends Controller
 	 */
 	public function missingAction( $message )
 	{
-		$view = view( 'd5300.router::exceptions.action_not_found', compact( 'message' ) )->render();
+		$view = $this->output( 'action_not_found', compact( 'message' ) )->render();
 
 		return response( $view );
 	}

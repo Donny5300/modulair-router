@@ -52,61 +52,63 @@ class SyncController extends BaseController
 				$q->withTrashed();
 			}
 			] )
-			->get(  );
+			->get();
 
 
 		return $items;
 	}
 
 	/**
+	 * @param Request $request
 	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
 	 */
-	public function sync()
+	public function sync( Request $request )
 	{
-		return $this->output( 'sync', compact( 'devRoutes', 'envRoutes', 'routes' ) );
+		if( $request->get( 'path' ) || $this->config['merge_config']['default_path'] )
+		{
+			$syncPath = $request->get( 'path', $this->config['merge_config']['default_path'] );
+
+			$data = $this->namespace
+				->with( [ 'modules'              => function ( $q )
+				{
+					$q->withTrashed();
+				}, 'modules.controllers'         => function ( $q )
+				{
+					$q->withTrashed();
+
+				}, 'modules.controllers.methods' => function ( $q )
+				{
+					$q->withTrashed();
+				}
+				] )
+				->withTrashed()
+				->get();
+
+			$devRoutes  = $this->pathBuilder->renderRouteList( $data );
+			$liveRoutes = $this->pathBuilder->getFromEnvironment( $syncPath );
+		}
+
+		return $this->output( 'sync', compact( 'liveRoutes', 'devRoutes' ) );
+
 	}
 
-	public function dev()
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function doSync( Request $request )
 	{
-		return $this->output( 'dev', compact( 'devRoutes', 'envRoutes', 'routes' ) );
-	}
-
-	public function live()
-	{
-		$data = $this->namespace
-			->with( [ 'modules'              => function ( $q )
-			{
-				$q->withTrashed();
-			}, 'modules.controllers'         => function ( $q )
-			{
-				$q->withTrashed();
-
-			}, 'modules.controllers.methods' => function ( $q )
-			{
-				$q->withTrashed();
-			}
-			] )
-			->withTrashed()
-			->get();
-
-		$devRoutes  = $this->pathBuilder->renderRouteList( $data );
-		$liveRoutes = $this->pathBuilder->getFromEnvironment();
-
-		return $this->output( 'live', compact( 'liveRoutes', 'devRoutes' ) );
-	}
-
-	public function doLiveSync( Request $request )
-	{
-		$syncer  = new RouteSynchroniser();
 		$routes  = $request->get( 'route', [ ] );
 		$deletes = $request->get( 'is_deleted', [ ] );
 
 		foreach( $routes as $key => $route )
 		{
-			$syncer
+			( new RouteSynchroniser() )
 				->setIsDeleted( $deletes, $key )
 				->syncRoute( $route );
 		}
+
+		return redirect()->back()->with( 'message', 'Syncing complete!' );
 
 
 	}

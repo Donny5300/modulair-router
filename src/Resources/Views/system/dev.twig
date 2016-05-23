@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="/{{ system_routes.base_path }}/css">
+
+<h1>Van Playground naar Packages</h1>
+
+<form action="/system/sync/dev">
+	Domain with path: <input type="text" size="50" value="http://www.p">
+</form>
+
+<form action="/system/sync/live" method="post">
+
+	{{ csrf_field() }}
+	<table width="800" border="1" cellpadding="5">
+		<tr>
+			<th>Select</th>
+			<th>Route</th>
+			<th>Deleted</th>
+			<th>Developer only</th>
+			<th>Method</th>
+		</tr>
+
+
+		<tr>
+			<td colspan="5" align="center">
+				<input type="submit" value="Sync!">
+			</td>
+		</tr>
+	</table>
+
+</form>

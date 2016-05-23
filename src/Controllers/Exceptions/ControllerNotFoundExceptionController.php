@@ -1,6 +1,7 @@
 <?php namespace Donny5300\ModulairRouter\Controllers\Exceptions;
 
 use App\Http\Controllers\Controller;
+use Donny5300\ModulairRouter\Controllers\System\BaseController;
 use Donny5300\ModulairRouter\Models;
 use Donny5300\ModulairRouter\TemplateBuilder;
 use Illuminate\Console\AppNamespaceDetectorTrait;
@@ -12,13 +13,15 @@ use Illuminate\Http\Request;
  *
  * @package Donny5300\Routing\Controllers
  */
-class ControllerNotFoundExceptionController extends Controller
+class ControllerNotFoundExceptionController extends BaseController
 {
 	use AppNamespaceDetectorTrait;
 	/**
 	 * @var Filesystem
 	 */
 	protected $fs;
+
+	protected $viewPath = 'exceptions';
 
 	/**
 	 * ExceptionController constructor.
@@ -47,7 +50,7 @@ class ControllerNotFoundExceptionController extends Controller
 		$module     = studly_case( $arguments['module'] );
 		$fileExists = $this->fileExists( $namespace, $module, $controller );
 
-		$view = view( 'd5300.router::exceptions.controller_not_found', compact( 'module', 'message', 'fileExists', 'namespace', 'controller' ) )->render();
+		$view = $this->output( 'controller_not_found', compact( 'module', 'message', 'fileExists', 'namespace', 'controller' ) )->render();
 
 		return response( $view );
 	}
