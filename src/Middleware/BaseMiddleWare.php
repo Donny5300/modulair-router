@@ -27,10 +27,13 @@ abstract class BaseMiddleWare
 	 */
 	public $action = 'index';
 
+	public $uuid;
+
 	/**
 	 * @var
 	 */
 	public $config;
+	private $segments;
 
 	/**
 	 * BaseMiddleWare constructor.
@@ -50,31 +53,30 @@ abstract class BaseMiddleWare
 	 */
 	public function setSegments( $uri )
 	{
-		$segments         = explode( '/', $uri );
-		$filteredSegments = array_values( array_filter( $segments ) );
+		$segments       = explode( '/', $uri );
+		$this->segments = array_values( array_filter( $segments ) );
 
-		$this->namespace  = snake_case( $filteredSegments[0] ) ?? false;
-		$this->module     = snake_case( $filteredSegments[1] ) ?? false;
-		$this->controller = $this->filter( $filteredSegments[2] ?? false );
-
-
-		if( array_key_exists( 3, $filteredSegments ) )
-		{
-			$action = !is_uuid( $filteredSegments[3] ) ? $filteredSegments[3] : $filteredSegments[4];
-
-			$this->action = $this->filter( $action );
-		}
+		$this->namespace  = $this->getSegment( 0 );
+		$this->module     = $this->getSegment( 1 );
+		$this->controller = $this->getSegment( 2 );
+		$this->action     = $this->getSegment( 3 );
 	}
 
 	/**
 	 * @param $value
 	 * @return bool|string
 	 */
-	public function filter( $value )
+	public function getSegment( $value )
 	{
-		if( $value )
+		if( array_key_exists( $value, $this->segments ) )
 		{
-			return snake_case( strtok( $value, "?" ) );
+			if( $value == 3 && is_uuid( $this->segments[$value] ) )
+			{
+				$this->uuid = $this->segments[$value];
+				$value++;
+			}
+
+			return snake_case( strtok( $this->segments[$value], '?' ) );
 		}
 
 		return false;
