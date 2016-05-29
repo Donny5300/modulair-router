@@ -37,7 +37,7 @@ class Router extends IlluminateRouter
 	 * @var
 	 */
 	private $uuid;
-	
+
 	/**
 	 * @var
 	 */
@@ -92,11 +92,11 @@ class Router extends IlluminateRouter
 					//Set the class
 					$class = $this->getControllerClass();
 
-					app()->singleton( 'router', function ( $router )
+					app()->singleton( 'router', function ( $router ) use ($namespace, $module, $controller)
 					{
-						$router->namespace  = $this->namespace;
-						$router->module     = $this->module;
-						$router->controller = $this->controller;
+						$router->namespace  = $namespace;
+						$router->module     = $module;
+						$router->controller = $controller;
 						$router->action     = $this->action;
 						$router->uuid       = $this->uuid;
 
