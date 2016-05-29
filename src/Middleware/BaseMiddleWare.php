@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 /**
  * Class BaseMiddleWare
  *
+ * @property bool|string guid
  * @package Donny5300\Routing\Middleware
  */
 abstract class BaseMiddleWare
@@ -33,7 +34,6 @@ abstract class BaseMiddleWare
 	 * @var
 	 */
 	public $config;
-	private $segments;
 
 	/**
 	 * BaseMiddleWare constructor.
@@ -53,32 +53,30 @@ abstract class BaseMiddleWare
 	 */
 	public function setSegments( $uri )
 	{
-		$segments       = explode( '/', $uri );
-		$this->segments = array_values( array_filter( $segments ) );
+		$request = app( 'request' );
 
-		$this->namespace  = $this->getSegment( 0 );
-		$this->module     = $this->getSegment( 1 );
-		$this->controller = $this->getSegment( 2 );
-		$this->action     = $this->getSegment( 3 );
+		$this->namespace  = $request->segment( 1 );
+		$this->module     = $request->segment( 2 );
+		$this->controller = $request->segment( 3, 'index' );
+		$this->action     = $this->guidOrAction( $request );
 	}
 
 	/**
-	 * @param $value
-	 * @return bool|string
+	 * @param $request
+	 * @return mixed
 	 */
-	public function getSegment( $value )
+	public function guidOrAction( $request )
 	{
-		if( array_key_exists( $value, $this->segments ) )
-		{
-			if( $value == 3 && is_uuid( $this->segments[$value] ) )
-			{
-				$this->uuid = $this->segments[$value];
-				$value++;
-			}
+		$segment = $request->segment( 4, 'index' );
 
-			return snake_case( strtok( $this->segments[$value], '?' ) );
+		if( is_uuid( $segment ) )
+		{
+			$this->uuid = $segment;
+
+			return $request->segment( 5, 'index' );
 		}
 
-		return false;
+		return $segment;
+
 	}
 }

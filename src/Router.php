@@ -16,10 +16,7 @@ use Illuminate\Routing\RouteDependencyResolverTrait;
 class Router extends IlluminateRouter
 {
 	use RouteDependencyResolverTrait;
-	/**
-	 * @var
-	 */
-	private $appNamespace;
+
 	/**
 	 * @var
 	 */
@@ -39,12 +36,8 @@ class Router extends IlluminateRouter
 	/**
 	 * @var
 	 */
-	private $guid;
-
-	/**
-	 * @var
-	 */
-	private $breadcrumbs;
+	private $uuid;
+	
 	/**
 	 * @var
 	 */
@@ -77,44 +70,54 @@ class Router extends IlluminateRouter
 	{
 		$this->config = config( 'modulair-router' );
 
+		$this->any( '{namespace}/{module?}/{controller?}/{uuidOrAction?}/{action?}/{extra?}/{extra2?}',
 
-		$this->any( '{namespace}/{module?}/{controller?}/{guidOrAction?}/{action?}/{extra?}/{extra2?}',
-
-			function ( $namespace, $module = null, $controller = 'index', $guidOrAction = null, $action = 'index', $extra = null, $extra2 = null )
-			{
-				//Capture the current request
-				$request = $this->getCurrentRequest();
-				//Set the namespace
-				$this->namespace = studly_case( $namespace );
-				//Set the module
-				$this->module = studly_case( $module );
-				//Set the controller
-				$this->controller = $controller;
-				//Set controller class
-				$this->controllerClass = studly_case( $controller ) . 'Controller';
-				//Set the controller action
-				$this->action = $this->getControllerMethod( $guidOrAction, camel_case( $action ) );
-				//Set the request method
-				$this->method = $request->method();
-
-				//Set the class
-				$class = $this->getControllerClass();
-
-
-				// Is an action
-				$this->setAction( $this->method, $action );
-
-				$this->validateAction( $class, $this->action );
-
-				if( $this->guid )
+				function ( $namespace, $module = null, $controller = 'index', $uuidOrAction = null, $action = 'index', $extra = null, $extra2 = null )
 				{
-					return call_user_func_array(
-						[ $class, $action ], $this->resolveClassMethodDependencies( [ $guid, $extra, $extra2 ], $class, $action )
-					);
-				}
+					//Capture the current request
+					$request = $this->getCurrentRequest();
+					//Set the namespace
+					$this->namespace = studly_case( $namespace );
+					//Set the module
+					$this->module = studly_case( $module );
+					//Set the controller
+					$this->controller = $controller;
+					//Set controller class
+					$this->controllerClass = studly_case( $controller ) . 'Controller';
+					//Set the controller action
+					$this->action = $this->getControllerMethod( $uuidOrAction, camel_case( $action ) );
+					//Set the request method
+					$this->method = $request->method();
 
-				return $this->callWithDependencies( $class, $action );
-			}
+					//Set the class
+					$class = $this->getControllerClass();
+
+					app()->singleton( 'router', function ( $router )
+					{
+						$router->namespace  = $this->namespace;
+						$router->module     = $this->module;
+						$router->controller = $this->controller;
+						$router->action     = $this->action;
+						$router->uuid       = $this->uuid;
+
+						return $router;
+					} );
+
+
+					// Is an action
+					$this->setAction( $this->method, $action );
+
+					$this->validateAction( $class, $this->action );
+
+					if( $this->uuid )
+					{
+						return call_user_func_array(
+								[ $class, $action ], $this->resolveClassMethodDependencies( [ $this->uuid, $extra, $extra2 ], $class, $action )
+						);
+					}
+
+					return $this->callWithDependencies( $class, $action );
+				}
 		);
 
 	}
@@ -133,9 +136,9 @@ class Router extends IlluminateRouter
 		if( !class_exists( $class ) )
 		{
 			throw new ControllerNotFoundException( $class, [
-				'namespace'  => $this->namespace,
-				'module'     => $this->module,
-				'controller' => $this->controller
+					'namespace'  => $this->namespace,
+					'module'     => $this->module,
+					'controller' => $this->controller
 			] );
 		}
 
@@ -144,20 +147,20 @@ class Router extends IlluminateRouter
 	}
 
 	/**
-	 * @param $guidOrAction
+	 * @param $uuidOrAction
 	 * @param $action
 	 * @return mixed
 	 */
-	public function getControllerMethod( $guidOrAction, $action )
+	public function getControllerMethod( $uuidOrAction, $action )
 	{
-		if( is_uuid( $guidOrAction ) || is_null( $guidOrAction ) )
+		if( is_uuid( $uuidOrAction ) || is_null( $uuidOrAction ) )
 		{
-			$this->guid = $guidOrAction;
+			$this->uuid = $uuidOrAction;
 
 			return $action;
 		}
 
-		return $guidOrAction;
+		return $uuidOrAction;
 	}
 
 	/**
