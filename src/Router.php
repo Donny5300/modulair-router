@@ -20,23 +20,23 @@ class Router extends IlluminateRouter
 	/**
 	 * @var
 	 */
-	private $namespace;
+	public $namespace;
 	/**
 	 * @var
 	 */
-	private $module;
+	public $module;
 	/**
 	 * @var
 	 */
-	private $controller;
+	public $controller;
 	/**
 	 * @var
 	 */
-	private $action;
+	public $action;
 	/**
 	 * @var
 	 */
-	private $uuid;
+	public $uuid;
 
 	/**
 	 * @var
@@ -45,11 +45,16 @@ class Router extends IlluminateRouter
 	/**
 	 * @var
 	 */
-	private $method;
+	public $method;
 	/**
 	 * @var
 	 */
 	private $controllerClass;
+
+	/**
+	 * @var
+	 */
+	public $route;
 
 
 	/**
@@ -74,6 +79,7 @@ class Router extends IlluminateRouter
 
 				function ( $namespace, $module = null, $controller = 'index', $uuidOrAction = null, $action = 'index', $extra = null, $extra2 = null )
 				{
+					$this->route( $namespace, $module, $controller, $uuidOrAction, $action, $extra, $extra2 );
 					//Capture the current request
 					$request = $this->getCurrentRequest();
 					//Set the namespace
@@ -91,18 +97,6 @@ class Router extends IlluminateRouter
 
 					//Set the class
 					$class = $this->getControllerClass();
-
-					app()->singleton( 'router', function ( $router ) use ($namespace, $module, $controller)
-					{
-						$router->namespace  = $namespace;
-						$router->module     = $module;
-						$router->controller = $controller;
-						$router->action     = $this->action;
-						$router->uuid       = $this->uuid;
-
-						return $router;
-					} );
-
 
 					// Is an action
 					$this->setAction( $this->method, $action );
@@ -212,5 +206,27 @@ class Router extends IlluminateRouter
 		{
 			$this->action = 'destroy';
 		}
+	}
+
+	/**
+	 * @param $namespace
+	 * @param $module
+	 * @param $controller
+	 * @param $uuidOrAction
+	 * @param $action
+	 * @param $extra
+	 * @param $extra2
+	 */
+	public function route( $namespace, $module, $controller, $uuidOrAction, $action, $extra, $extra2 )
+	{
+		$this->route = [
+				'namespace'  => $namespace,
+				'module'     => $module,
+				'controller' => $controller,
+				'action'     => $this->getControllerMethod( $uuidOrAction, $action ),
+				'uuid'       => is_uuid( $uuidOrAction ) ? $uuidOrAction : null,
+				'extra'      => $extra,
+				'extra2'     => $extra2
+		];
 	}
 }
