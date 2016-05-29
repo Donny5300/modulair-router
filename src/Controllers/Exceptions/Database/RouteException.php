@@ -73,6 +73,11 @@ class RouteException extends BaseController
 				->first();
 		}
 
+		foreach( $routeParams as $key => &$value )
+		{
+			$value = $value ? $value : 'index';
+		}
+
 		$output = $this->output( 'route_not_found', compact( 'namespace', 'module', 'controller', 'method', 'exception', 'routeParams', 'namespace', 'module', 'controller', 'method' ) );
 
 		return response( $output );
