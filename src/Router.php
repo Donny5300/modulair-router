@@ -106,11 +106,11 @@ class Router extends IlluminateRouter
 				if( $this->uuid )
 				{
 					return call_user_func_array(
-						[ $class, $action ], $this->resolveClassMethodDependencies( [ $this->uuid, $extra, $extra2 ], $class, camel_case( $action ) )
+						[ $class, $action ], $this->resolveClassMethodDependencies( [ $this->uuid, $extra, $extra2 ], $class, camel_case( $this->action ) )
 					);
 				}
 
-				return $this->callWithDependencies( $class, $action );
+				return $this->callWithDependencies( $class, camel_case( $this->action ) );
 			}
 		);
 
