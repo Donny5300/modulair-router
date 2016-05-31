@@ -77,41 +77,41 @@ class Router extends IlluminateRouter
 
 		$this->any( '{namespace}/{module?}/{controller?}/{uuidOrAction?}/{action?}/{extra?}/{extra2?}',
 
-				function ( $namespace, $module = null, $controller = 'index', $uuidOrAction = null, $action = 'index', $extra = null, $extra2 = null )
+			function ( $namespace, $module = null, $controller = 'index', $uuidOrAction = null, $action = 'index', $extra = null, $extra2 = null )
+			{
+				$this->route( $namespace, $module, $controller, $uuidOrAction, $action, $extra, $extra2 );
+				//Capture the current request
+				$request = $this->getCurrentRequest();
+				//Set the namespace
+				$this->namespace = studly_case( $namespace );
+				//Set the module
+				$this->module = studly_case( $module );
+				//Set the controller
+				$this->controller = $controller;
+				//Set controller class
+				$this->controllerClass = studly_case( $controller ) . 'Controller';
+				//Set the controller action
+				$this->action = $this->getControllerMethod( $uuidOrAction, camel_case( $action ) );
+				//Set the request method
+				$this->method = $request->method();
+
+				//Set the class
+				$class = $this->getControllerClass();
+
+				// Is an action
+				$this->setAction( $this->method, $action );
+
+				$this->validateAction( $class, $this->action );
+
+				if( $this->uuid )
 				{
-					$this->route( $namespace, $module, $controller, $uuidOrAction, $action, $extra, $extra2 );
-					//Capture the current request
-					$request = $this->getCurrentRequest();
-					//Set the namespace
-					$this->namespace = studly_case( $namespace );
-					//Set the module
-					$this->module = studly_case( $module );
-					//Set the controller
-					$this->controller = $controller;
-					//Set controller class
-					$this->controllerClass = studly_case( $controller ) . 'Controller';
-					//Set the controller action
-					$this->action = $this->getControllerMethod( $uuidOrAction, camel_case( $action ) );
-					//Set the request method
-					$this->method = $request->method();
-
-					//Set the class
-					$class = $this->getControllerClass();
-
-					// Is an action
-					$this->setAction( $this->method, $action );
-
-					$this->validateAction( $class, $this->action );
-
-					if( $this->uuid )
-					{
-						return call_user_func_array(
-								[ $class, $action ], $this->resolveClassMethodDependencies( [ $this->uuid, $extra, $extra2 ], $class, $action )
-						);
-					}
-
-					return $this->callWithDependencies( $class, $action );
+					return call_user_func_array(
+						[ $class, $action ], $this->resolveClassMethodDependencies( [ $this->uuid, $extra, $extra2 ], $class, camel_case( $action ) )
+					);
 				}
+
+				return $this->callWithDependencies( $class, $action );
+			}
 		);
 
 	}
@@ -130,9 +130,9 @@ class Router extends IlluminateRouter
 		if( !class_exists( $class ) )
 		{
 			throw new ControllerNotFoundException( $class, [
-					'namespace'  => $this->namespace,
-					'module'     => $this->module,
-					'controller' => $this->controller
+				'namespace'  => $this->namespace,
+				'module'     => $this->module,
+				'controller' => $this->controller
 			] );
 		}
 
@@ -182,7 +182,7 @@ class Router extends IlluminateRouter
 	{
 		if( !method_exists( $class, camel_case( $method ) ) )
 		{
-			throw new ActionNotFoundException( $method );
+			throw new ActionNotFoundException( camel_case( $method ) );
 		}
 	}
 
@@ -220,13 +220,13 @@ class Router extends IlluminateRouter
 	public function route( $namespace, $module, $controller, $uuidOrAction, $action, $extra, $extra2 )
 	{
 		$this->route = [
-				'namespace'  => $namespace,
-				'module'     => $module,
-				'controller' => $controller,
-				'action'     => $this->getControllerMethod( $uuidOrAction, $action ),
-				'uuid'       => is_uuid( $uuidOrAction ) ? $uuidOrAction : null,
-				'extra'      => $extra,
-				'extra2'     => $extra2
+			'namespace'  => $namespace,
+			'module'     => $module,
+			'controller' => $controller,
+			'action'     => $this->getControllerMethod( $uuidOrAction, $action ),
+			'uuid'       => is_uuid( $uuidOrAction ) ? $uuidOrAction : null,
+			'extra'      => $extra,
+			'extra2'     => $extra2
 		];
 	}
 }
